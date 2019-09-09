@@ -1,0 +1,18 @@
+<aura:component >
+    
+  <aura:attribute name="label" type="String" default="LABEL"></aura:attribute>
+  <aura:attribute name="step" type="Integer" default="1"></aura:attribute>
+  <aura:attribute name="minValue" type="Integer" default="0"></aura:attribute>
+  <aura:attribute name="lowerValue" type="Integer" default="0"></aura:attribute>
+  <aura:attribute name="maxValue" type="Integer" default="10"></aura:attribute>
+  <aura:attribute name="upperValue" type="Integer" default="10"></aura:attribute>
+    
+  <div class="lightning-range">
+    <label class="lightning-range-label">
+      {!v.label + ' (' + v.lowerValue + ' - ' + v.upperValue + ')'}
+    </label>
+    <lightning:slider style="{!'width:' + ((v.upperValue - v.minValue) / v.maxValue) * 100 + '%'}" value="{!v.lowerValue}" min="{!v.minValue}" max="{!v.upperValue}" step="{!v.step}"/> 
+    <lightning:slider style="{!'width:' + ((v.maxValue - v.upperValue) / v.maxValue) * 100 + '%'}" value="{!v.upperValue}" min="{!v.lowerValue}" max="{!v.maxValue}" step="{!v.step}"/>
+  </div>
+	
+</aura:component>

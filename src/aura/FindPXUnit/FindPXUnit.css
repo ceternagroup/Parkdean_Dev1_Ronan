@@ -1,0 +1,38 @@
+.THIS .findpx-search .slds-button {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.THIS.findpx {
+  position: relative;
+}
+
+.THIS .findpx-results .slds-card {
+  width: calc(33.33% - 10px);
+  display: inline-block;
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.THIS .findpx-results--model {
+  font-size: 15px;
+}
+
+.THIS .findpx-results--make {
+  padding-bottom: 5px;
+}
+
+.THIS .findpx-results--beds {
+  display: inline-block;
+  padding-right: 10px;
+}
+
+.THIS .findpx-results--size {
+  display: inline-block;
+}
+
+.THIS .findpx-results .slds-button {
+  width: 100%;
+  margin-top: 10px;
+}

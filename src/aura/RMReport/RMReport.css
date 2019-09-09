@@ -1,0 +1,99 @@
+.THIS.slds-card {
+  min-height: 100px;
+}
+
+.THIS .slds-table {
+  border-top: 0px;
+  border-bottom: 0px;
+}
+
+.THIS .slds-table thead th {
+  background-color: #fafaf9;
+  color: #fff;
+  padding: .25rem;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  font-size: 11px;
+  text-align: center;
+  line-height: normal;
+  white-space: normal !important;
+}
+.THIS .slds-table thead th.title {
+  text-align: center;
+}
+.THIS .slds-table thead th.title.central {
+  background: rgba(48, 118, 177, 1);
+}
+.THIS .slds-table thead th.title.park {
+  background: rgba(43, 182, 183, 1);
+}
+.THIS .slds-table thead th.title.total {
+  background: rgba(222, 41, 121, 1);
+}
+.THIS .slds-table thead th.central {
+  background: rgba(48, 118, 177, 0.7);
+}
+.THIS .slds-table thead th.park {
+  background: rgba(43, 182, 183, 0.7);
+}
+.THIS .slds-table thead th.total {
+  background: rgba(222, 41, 121, 0.7);
+}
+.THIS .slds-table tbody td {
+  text-align: center;
+  font-size: 12px;  
+  padding: .25rem;
+  color: rgba(22, 50, 92, 1);
+}
+.THIS .slds-table tbody td span {
+  font-size: 10px;
+}
+.THIS lightning-icon svg {
+  height: 12px !important;
+  width: 12px !important;
+  fill: #fff;
+}
+.THIS .slds-table tbody td.name {
+  text-align: left !important;
+}
+.THIS .slds-table th.space,
+.THIS .slds-table td.space{
+  border-top: 0px;
+  background: #fff;
+  border-left: 1px solid rgb(217, 219, 221);
+  border-right: 1px solid rgb(217, 219, 221);
+}
+.THIS .slds-table tbody td.p {
+  opacity: 0.7;
+}
+.THIS .slds-table tbody td.central {
+  background: rgba(48, 118, 177, 0.2);
+}
+.THIS .slds-table tbody td.park {
+  background: rgba(43, 182, 183, 0.2);
+}
+.THIS .slds-table tbody td.total {
+  background: rgba(222, 41, 121, 0.2);
+}
+.THIS .slds-table tr.All.Parks {
+  font-weight: bold;
+}
+.THIS tr.All.Parks td.central {
+  background: rgba(48, 118, 177, 0.3);
+}
+.THIS tr.All.Parks td.park {
+  background: rgba(43, 182, 183, 0.3);
+}
+.THIS tr.All.Parks td.total {
+  background: rgba(222, 41, 121, 0.3);
+}
+.THIS tr.All.Parks:hover td {
+  background: rgb(249, 249, 250)
+}
+.THIS .error {
+  text-align: center;
+  padding: 10px;
+}
+.THIS .error p {
+  padding-top: 5px;
+}

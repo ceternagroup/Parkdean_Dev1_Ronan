@@ -1,0 +1,83 @@
+<aura:component controller="ProductCatalogue" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+   
+  <aura:attribute name="recordId" type="String" default="a0D1X0000008nwuUAA"></aura:attribute>
+  <aura:attribute name="selectedProduct" type="Map"></aura:attribute>
+  <aura:attribute name="selectedTab" type="Integer" default="1"></aura:attribute>
+  <aura:attribute name="loading" type="Boolean" default="true"></aura:attribute>
+    
+  <!-- Component Initialisation Handler -->
+  <aura:handler name="init" value="{!this}" action="{!c.loadApp}"></aura:handler>
+    
+  <!-- Component Wrap -->
+  <div class="{!'product ' + v.detailMode}">
+      
+    <!-- Spinner -->
+    <aura:if isTrue="{!v.loading}">
+      <lightning:spinner alternativeText="Loading" /> 
+    </aura:if>
+    
+    <div class="product-scroll">
+      <div class="product-detail">
+        <div class="product-detail--banner">
+          <div class="product-detail--banner_title">
+            {!v.selectedProduct.Name}, {!v.selectedProduct.Unit_Type__c}  
+          </div>  
+          <div class="product-detail--banner_amount">
+            £<lightning:formattedNumber value="{!v.selectedProduct.Price__c}"></lightning:formattedNumber>
+          </div>
+        </div>
+        <div class="product-detail--info">
+          <div class="product-detail--info_images">
+            <div class="product-detail--info_image" style="{! 'background-image: url(' + $Resource.ProductPlaceholder + ')' }">
+              <div style="{!'background-image: url(' + v.selectedProduct.Preview_Selection__c + ')'}"/>
+            </div>
+            <div class="product-detail--info_thumbs">
+              <aura:if isTrue="{!v.selectedProduct.Previews__c.length != 0}">
+                <aura:iteration items="{!v.selectedProduct.Previews__c}" var="s">
+                  <lightning:button name="{!s.Image_URL__c}" onclick="{!c.setPreview}">
+                    <div style="{!'background-image: url(' + s.Image_URL__c+ ')'}"/>
+                  </lightning:button>
+                </aura:iteration>
+              </aura:if>
+            </div>
+          </div>
+          <ul class="product-detail--info_tabs">
+            <li name="1" class="{!v.selectedTab == 1}">
+              <lightning:button name="1" label="Key Information" onclick="{!c.changeTab}"></lightning:button>
+            </li>
+            <li name="2" class="{!v.selectedTab == 2}">
+              <lightning:button name="2" label="What's Included" onclick="{!c.changeTab}"></lightning:button>
+            </li>
+          </ul>  
+          <aura:if isTrue="{!v.selectedTab == 1}">
+            <div class="product-detail--info_content">
+              <div class="product-detail--info_item">
+                <lightning:icon iconName="utility:home"></lightning:icon>
+                <p>Bedrooms: {!v.selectedProduct.Number_of_bedrooms__c}</p>
+              </div>
+              <div class="product-detail--info_item">
+                <lightning:icon iconName="utility:groups"></lightning:icon>
+                <p>Sleeps: {!v.selectedProduct.Births__c}</p>
+              </div>
+              <div class="product-detail--info_item no-border">
+                <lightning:icon iconName="utility:event"></lightning:icon>
+                <p>Year: {!v.selectedProduct.Model_Year__c}</p>
+              </div>
+              <div class="product-detail--info_item no-border">
+                <lightning:icon iconName="utility:expand_alt"></lightning:icon>
+                <p>Size: {!v.selectedProduct.Width__c}ft x {!v.selectedProduct.Length__c}ft</p>
+              </div>
+            </div>
+          </aura:if>
+          <aura:if isTrue="{!v.selectedTab == 2}">
+            <div class="product-detail--info_content">
+              <lightning:formattedRichText value="{!v.selectedProduct.Holiday_Home_description__c}"/>
+            </div>
+          </aura:if>
+        </div>
+      </div>
+    </div>
+      
+  </div>
+	
+</aura:component>

@@ -1,0 +1,124 @@
+<aura:component controller="RMReportClass" implements="flexipage:availableForAllPageTypes" access="global">
+    
+  <!-- Init Attributes -->
+  <aura:attribute name="parks" type="List[]"></aura:attribute>
+  <aura:attribute name="loading" type="Boolean" default="true"></aura:attribute>
+  <aura:attribute name="error" type="String"></aura:attribute>
+  
+  <meta charset="UTF-8"/>
+    
+  <!-- Load Data -->
+  <aura:handler name="init" value="{!this}" action="{!c.getReports}"></aura:handler>
+    
+  <!-- Body -->
+  <div class="slds-card">
+    
+    <!-- Loading -->
+    <aura:if isTrue="{!v.loading}">
+      <lightning:spinner alternativeText="Loading" size="small" />    
+    </aura:if>
+      
+    <!-- Loaded -->
+    <aura:if isTrue="{!!v.loading}">
+        
+      <!-- Error -->
+      <aura:if isTrue="{!v.error}">
+        <div class="error">
+          <lightning:icon iconName="utility:warning" alternativeText="Warning!" variant="warning"/>
+          <p>{!v.error}</p>
+        </div>
+      </aura:if>
+      
+      <!-- Data Table -->
+      <aura:if isTrue="{!!v.error}">
+        <table class="slds-table slds-table_bordered">
+          <!-- Header -->
+          <thead>
+            <tr class="slds-line-height_reset">
+              <th><div></div></th>
+              <th class="title central" colspan="9"><div>Central</div></th>
+              <th class="space"><div></div></th>
+              <th class="title park" colspan="9"><div>Park</div></th>
+              <th class="space"><div></div></th>
+              <th class="title total" colspan="9"><div>Total</div></th>
+            </tr>  
+          </thead> 
+          <!-- Subheader -->
+          <thead>
+            <tr class="slds-line-height_reset">
+              <th><div style="color: rgb(22, 50, 92)">Park / Region</div></th>
+              <th class="central"><div>Leads</div></th>
+              <th class="central"><div><lightning:icon iconName="utility:forward"/>%</div></th>
+              <th class="central"><div>Appts</div></th>
+              <th class="central"><div><lightning:icon iconName="utility:forward"/>%</div></th>
+              <th class="central"><div>Visits</div></th>
+              <th class="central"><div><lightning:icon iconName="utility:forward"/>%</div></th>
+              <th class="central"><div>Signups</div></th>
+              <th class="central"><div><lightning:icon iconName="utility:forward"/>%</div></th>
+              <th class="central"><div>Sales</div></th>
+              <th class="space"><div></div></th>
+              <th class="park"><div>Leads</div></th>
+              <th class="park"><div><lightning:icon iconName="utility:forward"/>%</div></th>
+              <th class="park"><div>Appts</div></th>
+              <th class="park"><div><lightning:icon iconName="utility:forward"/>%</div></th>
+              <th class="park"><div>Visits</div></th>
+              <th class="park"><div><lightning:icon iconName="utility:forward"/>%</div></th>
+              <th class="park"><div>Signups</div></th>
+              <th class="park"><div><lightning:icon iconName="utility:forward"/>%</div></th>
+              <th class="park"><div>Sales</div></th>
+              <th class="space"><div></div></th>
+              <th class="total"><div>Leads</div></th>
+              <th class="total"><div><lightning:icon iconName="utility:forward"/>%</div></th>
+              <th class="total"><div>Appts</div></th>
+              <th class="total"><div><lightning:icon iconName="utility:forward"/>%</div></th>
+              <th class="total"><div>Visits</div></th>
+              <th class="total"><div><lightning:icon iconName="utility:forward"/>%</div></th>
+              <th class="total"><div>Signups</div></th>
+              <th class="total"><div><lightning:icon iconName="utility:forward"/>%</div></th>
+              <th class="total"><div>Sales</div></th>
+            </tr>  
+          </thead> 
+          <!-- Rows -->
+          <tbody>
+            <aura:iteration items="{!v.parks}" var="p">
+              <tr class="{!p.name}">
+                <td class="name"><div class="slds-truncate">{!p.name}</div></td>
+                <td class="central"><div class="slds-truncate">{!p.central.leads}</div></td>
+                <td class="central p"><div class="slds-truncate">{!p.central.leadToAppointment}</div></td>
+                <td class="central"><div class="slds-truncate">{!p.central.appointments}</div></td>
+                <td class="central p"><div class="slds-truncate">{!p.central.appointmentToVisit}</div></td>
+                <td class="central"><div class="slds-truncate">{!p.central.visits}</div></td>
+                <td class="central p"><div class="slds-truncate">{!p.central.visitToSignup}</div></td>
+                <td class="central"><div class="slds-truncate">{!p.central.signups}</div></td>
+                <td class="central p"><div class="slds-truncate">{!p.central.signupToSale}</div></td>
+                <td class="central"><div class="slds-truncate">{!p.central.sales}</div></td>
+                <td class="space"><div></div></td>
+                <td class="park"><div class="slds-truncate">{!p.park.leads}</div></td>
+                <td class="park p"><div class="slds-truncate">{!p.park.leadToAppointment}</div></td>
+                <td class="park"><div class="slds-truncate">{!p.park.appointments}</div></td>
+                <td class="park p"><div class="slds-truncate">{!p.park.appointmentToVisit}</div></td>
+                <td class="park"><div class="slds-truncate">{!p.park.visits}</div></td>
+                <td class="park p"><div class="slds-truncate">{!p.park.visitToSignup}</div></td>
+                <td class="park"><div class="slds-truncate">{!p.park.signups}</div></td>
+                <td class="park p"><div class="slds-truncate">{!p.park.signupToSale}</div></td>
+                <td class="park"><div class="slds-truncate">{!p.park.sales}</div></td>
+                <td class="space"><div></div></td>
+                <td class="total"><div class="slds-truncate">{!p.total.leads}</div></td>
+                <td class="total p"><div class="slds-truncate">{!p.total.leadToAppointment}</div></td>
+                <td class="total"><div class="slds-truncate">{!p.total.appointments}</div></td>
+                <td class="total p"><div class="slds-truncate">{!p.total.appointmentToVisit}</div></td>
+                <td class="total"><div class="slds-truncate">{!p.total.visits}</div></td>
+                <td class="total p"><div class="slds-truncate">{!p.total.visitToSignup}</div></td>
+                <td class="total"><div class="slds-truncate">{!p.total.signups}</div></td>
+                <td class="total p"><div class="slds-truncate">{!p.total.signupToSale}</div></td>
+                <td class="total"><div class="slds-truncate">{!p.total.sales}</div></td>
+              </tr>
+            </aura:iteration>
+          </tbody>
+        </table>
+      </aura:if>
+        
+    </aura:if>
+  </div>
+	
+</aura:component>

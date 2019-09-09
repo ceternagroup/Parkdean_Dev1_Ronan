@@ -1,0 +1,20 @@
+.THIS.slds-card {
+  height: 120px;
+  text-align: center;
+}
+.THIS.slds-card .slds-text-title_caps {
+  padding-top: 22px;
+}
+.THIS.slds-card .slds-text-title_caps:nth-child(2) {
+  padding-top: 8px;
+}
+.THIS.slds-card .slds-text-heading_large {
+  padding-top: 5px;
+}
+
+.THIS.slds-card .slds-text-heading_large.Error {
+  color: #c23934;
+}
+.THIS.slds-card .slds-text-heading_large.Warning {
+  color: #e6ab3b;
+}

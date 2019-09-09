@@ -1,0 +1,25 @@
+<aura:component controller="StockItemFinal" implements="force:lightningQuickAction,force:hasRecordId">
+    
+  <aura:attribute name="recordId" type="String" default="a0D1X0000008qXTUAY"></aura:attribute>
+  <aura:attribute name="loading" type="Boolean" default="false"></aura:attribute>
+  <aura:attribute name="error" type="Boolean" default="false"></aura:attribute>
+  <aura:attribute name="message" type="Boolean" default="false"></aura:attribute>
+    
+  <aura:handler name="init" value="{!this}" action="{!c.setFinal}"></aura:handler>
+  
+  <!-- App -->
+  <div class="stock-final">
+      
+    <!-- Spinner -->
+    <aura:if isTrue="{!v.loading}">
+      <lightning:spinner alternativeText="Loading" /> 
+    </aura:if>
+      
+    <!-- Error -->
+    <aura:if isTrue="{!v.error}">
+      <p>{!v.message}</p>
+    </aura:if>
+      
+  </div>
+	
+</aura:component>

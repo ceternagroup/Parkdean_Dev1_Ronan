@@ -1,0 +1,5 @@
+<aura:component controller="CustomTabs" implements="flexipage:availableForAllPageTypes">
+    
+  <ltng:require scripts="{!$Resource.CustomTabs}" afterScriptsLoaded="{!c.loadColours}"></ltng:require>
+	
+</aura:component>

@@ -1,0 +1,53 @@
+<aura:component controller="FindPXUnit" implements="force:lightningQuickAction,force:hasRecordId">
+    
+  <!-- Attributes -->
+  <aura:attribute name="recordId" type="String" default="0Q01X00000000UbSAI"></aura:attribute>
+  <aura:attribute name="modelYear" type="String" default="2008"></aura:attribute>
+  <aura:attribute name="modelMake" type="String" default="ABI"></aura:attribute>
+  <aura:attribute name="pxUnits" type="List"></aura:attribute>
+  <aura:attribute name="filteredPXUnits" type="List"></aura:attribute>
+  <aura:attribute name="search" type="String" default=""></aura:attribute>
+  <aura:attribute name="loading" type="Boolean" default="false"></aura:attribute>
+  <aura:attribute name="searched" type="Boolean" default="false"></aura:attribute>
+    
+  <!-- App -->
+  <div class="findpx">
+      
+    <!-- Spinner -->
+    <aura:if isTrue="{!v.loading}">
+      <lightning:spinner alternativeText="Loading" /> 
+    </aura:if>
+      
+    <!-- Search Box -->
+    <aura:if isTrue="{!!v.searched}">
+      <div class="findpx-search">
+        <p>Please choose a Year and Manufacturer to search for PX Units.</p>
+        <lightning:input label="Year" value="{!v.modelYear}"></lightning:input>
+        <lightning:input label="Manufacturer" value="{!v.modelMake}"></lightning:input>
+        <lightning:button label="Search" variant="brand" onclick="{!c.runSearch}"></lightning:button>
+      </div>  
+    </aura:if>
+      
+    <!-- Wizard Results -->
+    <aura:if isTrue="{!v.searched}">
+      <div class="findpx-results">
+        <lightning:input label="Search by model..." value="{!v.search}" type="search" onchange="{!c.runLocalSearch}" onkeyup="{!c.runLocalSearch}"></lightning:input>
+        <aura:if isTrue="{!v.filteredPXUnits.length == 0}">
+          <p>No Results Found</p>  
+        </aura:if>
+        <aura:iteration items="{!v.filteredPXUnits}" var="px">
+          <div class="slds-card">
+            <div class="findpx-results--model">{!px.Model__c}</div>  
+            <div class="findpx-results--make">{!px.Make__c} - {!px.Year__c}</div> 
+            <div class="findpx-results--beds">Beds: {!px.Bedrooms__c}</div>
+            <div class="findpx-results--size">Size: {!px.Size__c}</div>
+            <lightning:button name="{!px.Name}" label="Save" variant="brand" onclick="{!c.saveUnit}"></lightning:button>
+          </div>
+        </aura:iteration>  
+        <lightning:button label="Back" variant="neutral" onclick="{!c.goBack}"></lightning:button>
+      </div>  
+    </aura:if>
+      
+  </div>
+	
+</aura:component>

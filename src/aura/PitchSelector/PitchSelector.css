@@ -1,0 +1,56 @@
+.THIS {
+  background: rgb(245, 245, 245);
+}
+
+.THIS.app-header {
+  background: #3276b0;
+  color: #FFF;
+  height: 70px;
+  padding: 10px 20px;
+}
+.THIS .app-header--quote {
+  font-size: 18px;
+  font-weight: bold;
+}
+.THIS.app-header .slds-button {
+  position: absolute;
+  right: 20px;
+  top: 18px;
+  background: #20507a;
+  border-color: #20507a;
+}
+
+.THIS.app-lhs {
+  padding: 20px;
+  width: calc(100%);
+  position: absolute;
+  left: 0;
+  top: 70px;
+  bottom: 0;
+}
+
+.THIS.app-rhs {
+  padding: 20px 20px 20px 0;
+  width: 320px;
+  position: absolute;
+  right: 0;
+  top: 70px;
+  bottom: 0;
+}
+
+.THIS.app-lhs > .slds-card,
+.THIS.app-rgs > .slds-card {
+  overflow: hidden;
+}
+
+.THIS .product {
+  height: calc(100vh - 110px);
+  width: 100%;
+}
+
+.THIS .product-scroll {
+  height: calc(100vh - 230px);
+  min-height: calc(100vh - 230px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}

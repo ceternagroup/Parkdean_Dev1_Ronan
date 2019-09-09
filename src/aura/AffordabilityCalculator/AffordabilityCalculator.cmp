@@ -1,0 +1,158 @@
+<aura:component controller="AffordabilityCalculator" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    
+  <aura:attribute name="recordId" type="String"></aura:attribute>
+  <aura:attribute name="quoteId" type="String"></aura:attribute>
+  <aura:attribute name="quote" type="Map"></aura:attribute>
+  <aura:attribute name="productId" type="String"></aura:attribute>
+  <aura:attribute name="selectedProduct" type="Map"></aura:attribute>
+  <aura:attribute name="productAge" type="Decimal"></aura:attribute>
+  <aura:attribute name="unavailable" type="Boolean"></aura:attribute>
+  <aura:attribute name="productAmount" type="Decimal" default="0"></aura:attribute>
+  <aura:attribute name="overideAmount" type="Decimal"></aura:attribute>
+  <aura:attribute name="minimumDeposit" type="Decimal" default="0.1"></aura:attribute>
+  <aura:attribute name="maximumTerm" type="Integer" default="10"></aura:attribute>
+  <aura:attribute name="representativeAPR" type="Decimal" default="{!$Label.c.APR}"></aura:attribute>
+  <aura:attribute name="lock" type="Boolean" default="false"></aura:attribute>
+  <aura:attribute name="quotePx" type="Integer" default="0"></aura:attribute>
+  <aura:attribute name="hasPx" type="Boolean" default="false"></aura:attribute>
+  <aura:attribute name="lineItem" type="Boolean" default="false"></aura:attribute>
+  
+  <aura:attribute name="installmentRate" type="Decimal"></aura:attribute>
+  <aura:attribute name="totalPayments" type="Integer" default="84"></aura:attribute>
+  <aura:attribute name="totalDeposit" type="Decimal" default="0"></aura:attribute>
+  <aura:attribute name="changeCost" type="Decimal"></aura:attribute>
+  <aura:attribute name="loanAmount" type="Decimal" default="0"></aura:attribute>
+  <aura:attribute name="equity" type="Decimal"></aura:attribute>
+  <aura:attribute name="paymentAmount" type="Decimal"></aura:attribute>
+  <aura:attribute name="totalCredit" type="Decimal"></aura:attribute>
+  <aura:attribute name="interestRate" type="Decimal"></aura:attribute>
+  <aura:attribute name="totalRepayment" type="Decimal"></aura:attribute>
+  <aura:attribute name="totalPayable" type="Decimal"></aura:attribute>
+    
+  <aura:attribute name="loading" type="Boolean" default="true"></aura:attribute>
+    
+  <aura:handler name="init" value="{!this}" action="{!c.getValues}"></aura:handler>
+  <aura:handler name="change" value="{!v.selectedProduct}" action="{!c.selectedProduct}"/>
+    
+  <div class="{!'calculator ' + v.unavailable}">
+      
+  <aura:if isTrue="{!v.loading}">
+    <lightning:spinner alternativeText="Loading" />
+  </aura:if>
+      
+    <div class="calculator-amount">
+      <label>Total Package Price<lightning:helptext content="Caravan price plus ancillaries."/></label>
+      <div class="calculator-input">
+        <aura:if isTrue="{!!v.lock}">
+          <lightning:buttonIcon name="subtract" iconName="utility:dash" alternativeText="Subtract" onclick="{!c.changeAmount}"/>
+        </aura:if>
+        <lightning:input disabled="{!v.lock}" type="number" step="0.01" name="amount" value="{!v.productAmount}" formatter="currency" onchange="{!c.changeAmount}"></lightning:input>
+        <aura:if isTrue="{!!v.lock}">
+          <lightning:buttonIcon name="add" iconName="utility:add" alternativeText="Add" onclick="{!c.changeAmount}"/>
+        </aura:if>
+      </div>
+      <aura:if isTrue="{!!v.lock}">
+        <lightning:slider aura:id="amountRange" name="range" min="0" max="500000" step="0.01" onchange="{!c.changeAmount}"/>
+      </aura:if>
+    </div>
+      
+    <aura:if isTrue="{!v.hasPx}">
+      <div style="position: relative"><label class="calculator-sub">PX value:</label>£<lightning:formattedNumber value="{!v.quote.PX_Value__c}"/><lightning:helptext content="Actual PX value offered."/></div>
+      <div style="position: relative"><label class="calculator-sub">Finance Settlement:</label>£<lightning:formattedNumber value="{!v.quote.Finance_settlement__c}"/><lightning:helptext content="Contact Lender for exact settlement."/></div>
+      <div style="position: relative"><label class="calculator-sub">Cost to change:</label>£<lightning:formattedNumber value="{!v.changeCost}"/><lightning:helptext content="Price to pay after part exchange value."/></div>
+      
+    </aura:if>
+      
+    <div style="margin-top: 10px" class="calculator-deposit">
+      <label>Cash Deposit<lightning:helptext content="Deposit customer wishes to pay (min 10%)."/></label>
+      <div class="calculator-input">
+        <lightning:buttonIcon name="subtract" iconName="utility:dash" alternativeText="Subtract" onclick="{!c.changeDeposit}"/>
+        <lightning:input type="number" name="amount" value="{!v.totalDeposit}" step="0.01" formatter="currency" onblur="{!c.changeDeposit}"></lightning:input>
+        <lightning:buttonIcon name="add" iconName="utility:add" alternativeText="Add" onclick="{!c.changeDeposit}" />
+      </div>
+      <lightning:slider aura:id="depositRange" name="range" min="0" max="{!v.productAmount}" step="0.01" onchange="{!c.changeDeposit}"/>
+    </div>
+      
+      <div style="position: relative"><label class="calculator-sub">Income Promise Scheme:</label>£<lightning:formattedNumber value="{!v.quote.IPS_to_sale2__c}"/><lightning:helptext content="IPS Sublet income used towards deposit."/></div>
+      
+    <div style="margin-top: 10px" class="calculator-term">
+      <label>Length of term (months)<lightning:helptext content="Dependent on age of caravan."/></label>
+      <div class="calculator-input">
+        <lightning:buttonIcon name="subtract" iconName="utility:dash" alternativeText="Subtract" onclick="{!c.changeTerm}"/>
+        <lightning:input type="number" name="amount" value="{!v.totalPayments}" onblur="{!c.changeTerm}"></lightning:input>
+        <lightning:buttonIcon name="add" iconName="utility:add" alternativeText="Add" onclick="{!c.changeTerm}"/>
+      </div>
+    </div>
+      
+      <div style="position: relative"><label class="calculator-sub">Balance to finance:</label>£<lightning:formattedNumber value="{!v.loanAmount}"/><lightning:helptext content="Before interest."/></div>
+      
+    <div class="calulator-breakdown">
+      <table>
+        <tr>
+          <td style="width: calc(100% - 350px)"></td>
+          <td style="text-align: right; width: 200px">Representative APR</td>
+          <td style="text-align: right; width: 120px">{!v.representativeAPR}%</td>
+        </tr>  
+        <tr>
+          <td style="width: calc(100% - 100px)"></td>
+          <td style="text-align: right; width: 200px; position: relative">Total repayment<lightning:helptext style="top: 7px" content="Total of monthly repayments made to lender."/></td>
+          <td style="text-align: right; width: 120px">£<lightning:formattedNumber value="{!v.totalRepayment}"/></td>
+        </tr>
+        <tr>
+          <td style="width: calc(100% - 100px)"></td>
+          <td style="text-align: right; width: 200px; position: relative">Total cost of credit<lightning:helptext style="top: 7px" content="Interest + charges for credit."/></td>
+          <td style="text-align: right; width: 120px">£<lightning:formattedNumber value="{!v.totalCredit}"/></td>
+        </tr>
+      </table>
+    </div>   
+      
+    <div class="calulator-result">
+      <div class="calculator-result--amount">
+        £<lightning:formattedNumber value="{!v.paymentAmount}"/>
+      </div>
+      <div class="calculator-result--payments">
+        {!v.totalPayments} monthly <br/> payments of
+      </div>
+    </div> 
+      
+    <div class="calculator-action">
+      <lightning:button label="Save result" variant="brand" onclick="{!c.saveResult}"></lightning:button>  
+    </div>
+      
+    <div class="calculator-gubbins">
+      Record Id: {!v.recordId}<br/>
+      Quote Id: {!v.quoteId}<br/>
+      <br/>
+      <aura:if isTrue="{!v.selectedProduct}">
+        Selection made:
+        {!v.selectedProduct.Name} ({!v.selectedProduct.Model_Year__c})<br/>
+        Product Age: {!v.productAge} years<br/>
+        Product Type: {!v.selectedProduct.Unit_Type__c}<br/>
+      </aura:if>
+      <aura:if isTrue="{!!v.unavailable}">
+        Product Amount: {!v.productAmount}<br/>
+        APR: {!v.representativeAPR}%<br/>
+        <br/>
+        Installment Rate: {!v.installmentRate}<br/>
+        Total Payments: {!v.totalPayments} (max {!v.maximumTerm} years)<br/>
+        Minimum Deposit: {!v.totalDeposit} (min {!v.minimumDeposit})<br/>
+        Loan Amount: {!v.loanAmount}<br/>
+        Payment Amounts: {!v.paymentAmount}<br/>
+        Total Charge for Credit: {!v.totalCredit}<br/>
+        Interest Rate: {!v.interestRate}<br/>
+        Total Repayment: {!v.totalRepayment}<br/>
+        PX Amount: {!v.quotePx}<br/>
+        Total Payable: {!v.totalPayable}<br/>
+      </aura:if>
+      <aura:if isTrue="{!v.unavailable}">Finance Not Available</aura:if>
+    </div>
+      
+   <aura:if isTrue="{!v.unavailable}">
+     <div class="calculator-nope">
+       Finance Not Available
+     </div>
+   </aura:if>
+      
+  </div>
+	
+</aura:component>

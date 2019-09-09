@@ -1,0 +1,85 @@
+.THIS {
+  background: rgb(245, 245, 245);
+  padding: 3rem 0;
+}
+
+.THIS.app-header {
+  background: #3276b0;
+  color: #FFF;
+  height: 70px;
+  padding: 10px 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+.THIS .app-header--quote {
+  font-size: 18px;
+  font-weight: bold;
+}
+.THIS.app-header .slds-button {
+  position: absolute;
+  right: 20px;
+  top: 18px;
+  background: #20507a;
+  border-color: #20507a;
+}
+
+.THIS.app-lhs {
+  padding: 20px;
+  width: calc(100% - 320px);
+  position: absolute;
+  left: 0;
+  top: 70px;
+  height: calc(100% - 6rem - 70px);
+}
+
+.THIS.app-rhs {
+  padding: 20px 20px 20px 0;
+  width: 320px;
+  position: absolute;
+  right: 0;
+  top: 70px;
+  height: calc(100% - 6rem - 70px);
+}
+
+.THIS.app-lhs > .slds-card,
+.THIS.app-rgs > .slds-card {
+  overflow: hidden;
+}
+
+.THIS.app-rhs .slds-card {
+  border: none;
+}
+
+.THIS .product {
+  height: 100% !important;
+  width: 100% !important;;
+}
+
+.THIS .product-scroll {
+  height: calc(100vh - 320px - 3rem);
+  min-height: calc(100vh - 320px - 3rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.THIS .product.true .product-scroll {
+  height: calc(100vh - 208px);
+  min-height: calc(100vh - 208px);
+}
+
+@media (min-width: 600px) {
+  .THIS .product-cards { width: 240px }
+}
+@media (min-width: 820px) {
+  .THIS .product-cards { width: 460px }
+}
+@media (min-width: 1040px) {
+  .THIS .product-cards { width: 680px }
+}
+@media (min-width: 1260px) {
+  .THIS .product-cards { width: 900px }
+}
+@media (min-width: 1480px) {
+  .THIS .product-cards { width: 1120px }
+}

@@ -1,0 +1,186 @@
+.THIS .calculator-gubbins {
+  font-family: monospace;
+  font-size: 10px;
+  display: none;
+  background: black;
+  color: white;
+  padding: 10px;
+}
+
+.THIS lightning-helptext .slds-form-element__icon {
+  padding-top: 0px !important;
+}
+.THIS lightning-helptext {
+  padding-left: 5px;
+  position: absolute;
+  top: -3px;
+}
+.THIS lightning-helptext .slds-button__icon {
+  fill: rgb(22, 50, 92);
+}
+.THIS label {
+  position: relative;
+}
+.THIS div label ~ lightning-helptext {
+  top: 7px !important;
+}
+
+.THIS .calculator-nope {
+  padding: 0 10px 10px 10px;
+}
+
+.THIS .calculator-sub {
+  display: inline-block;
+}
+
+.THIS.calculator {
+  background: #c5dbef;
+  padding-top: 10px;
+  border-radius: 4px;
+  position: relative;
+}
+.THIS.calculator.true .calculator-amount,
+.THIS.calculator.true .calculator-deposit,
+.THIS.calculator.true .calculator-term,
+.THIS.calculator.true .calulator-breakdown,
+.THIS.calculator.true .calulator-result,
+.THIS.calculator.true .calculator-action {
+  display: none;
+}
+
+.THIS.calculator label {
+  font-weight: bold;
+  padding: 0 10px;
+  margin-top: 10px;
+}
+
+.THIS .calculator-input {
+  background: #FFF;
+  padding: 5px;
+  margin: 3px 10px 0 10px;
+  height: 42px;
+  border-radius: 4px;
+}
+
+.THIS .calculator-input .slds-button {
+  float: left;
+  background: #3276b0;
+  border-color: #3276b0;
+  color: #FFFFFF;
+}
+
+.THIS .calculator-input lightning-input {
+  height: 30px;
+  float: left;
+  width: calc(100% - 64px);
+}
+.THIS .calculator-input lightning-input input[disabled] {
+  width: 100%;
+  background: #fff;
+  margin-left: 30px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.THIS .calculator-input lightning-input label {
+  display: none;
+}
+
+.THIS .calculator-input lightning-input input {
+  border: 0px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.THIS.calculator lightning-slider label,
+.THIS.calculator lightning-slider .slds-slider__value {
+  display: none;
+}
+
+.THIS.calculator lightning-slider input {
+  margin: 0 10px;
+  height: 40px;
+}
+
+.THIS .slds-slider__range::-webkit-slider-thumb {
+  background: #3276b0;
+  border-radius: 0px;
+  width: 10px;
+  height: 25px;
+  margin-top: -10px;
+  box-shadow: none;
+  border: 0;
+}
+
+.THIS .slds-slider__range::-webkit-slider-runnable-track {
+  background: #FFF;
+}
+
+.THIS .calulator-breakdown {
+  margin-top: 10px;
+  background: #58a3e4;
+  color: #FFFFFF;
+  padding: 15px 10px 0 10px;
+}
+
+.THIS .calulator-breakdown tr {
+  border-bottom: 1px solid #FFF;
+}
+
+.THIS .calulator-breakdown tr:nth-last-child(1) {
+  border: 0px;
+}
+
+.THIS .calulator-breakdown td {
+  padding: 10px;
+}
+
+.THIS .calulator-result {
+  background: #20507a;
+  color: #FFFFFF;
+  height: 60px;
+  padding: 10px;
+}
+
+.THIS .calculator-action {
+  background: #20507a;
+  color: #FFFFFF;
+  height: 40px;
+  padding: 0 10px 10px 10px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.THIS .calculator-action .slds-button {
+  background-color: #58a3e4;
+  border-color: #58a3e4;
+  color: #FFF;
+  width: 100%;
+}
+
+.THIS .calculator-result--payments {
+  float: right;
+  padding-right: 10px;
+}
+
+.THIS .calculator-result--amount {
+  float: right;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.THIS .calculator-term {
+  position: relative
+}
+
+.THIS .calculator-term:after {
+  position: absolute;
+  content: '';
+  left: calc(50% - 20px);
+  bottom: -50px;
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 15px solid #c5dbef;
+}

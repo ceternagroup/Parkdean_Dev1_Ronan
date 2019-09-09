@@ -1,0 +1,211 @@
+<aura:component controller="ProductCatalogue" implements="lightning:isUrlAddressable,flexipage:availableForAllPageTypes" access="global">
+    
+  <!-- Component Attributes -->
+  <aura:attribute name="products" type="List"></aura:attribute>
+  <aura:attribute name="existing" type="List"></aura:attribute>
+  <aura:attribute name="quoteId" type="String"></aura:attribute>
+  <aura:attribute name="recordId" type="String"></aura:attribute>
+  <aura:attribute name="parkId" type="String"></aura:attribute>
+  <aura:attribute name="detailMode" type="Boolean" default="false"></aura:attribute>
+  <aura:attribute name="selectedProduct" type="Map"></aura:attribute>
+  <aura:attribute name="selectedTab" type="Integer" default="1"></aura:attribute>
+  <aura:attribute name="loading" type="Boolean" default="true"></aura:attribute>
+  <aura:attribute name="toast" type="String" default=""></aura:attribute>
+    
+  <!-- Filter Attributes -->
+  <aura:attribute name="filteredProducts" type="List"></aura:attribute>
+  <aura:attribute name="filterMinPrice" type="Integer" default="0"></aura:attribute>
+  <aura:attribute name="filterPrice" type="Integer" default="250000"></aura:attribute>
+  <aura:attribute name="filterBedroom" type="Integer" default="1"></aura:attribute>
+  <aura:attribute name="filterBirths" type="Integer" default="1"></aura:attribute>
+  <aura:attribute name="filterWidth" type="Integer" default="22"></aura:attribute>
+  <aura:attribute name="filterHeight" type="Integer" default="60"></aura:attribute>
+  <aura:attribute name="filterAccessible" type="Boolean" default="false"></aura:attribute>
+  <aura:attribute name="filterType" type="String" default="Any"></aura:attribute>
+  <aura:attribute name="filterYear" type="String" default="Any"></aura:attribute>
+  <aura:attribute name="filterStatus" type="String" default="Any"></aura:attribute>
+  
+  <!-- Product Selection Emitter -->
+  <aura:registerEvent name="ProductSelection" type="c:ProductSelection"/>
+    
+  <!-- Component Initialisation Handler -->
+  <aura:handler name="init" value="{!this}" action="{!c.loadApp}"></aura:handler>
+    
+  <!-- Component Wrap -->
+  <div class="{!'product ' + v.detailMode}">
+      
+    <!-- Toasts -->
+    <aura:if isTrue="{!v.toast != ''}">
+      <div class="slds-notify_container">
+        <div class="slds-notify slds-notify_toast slds-theme_success">
+          <div style="width: 100%" class="slds-notify__content">
+            <h2 style="text-align: center" class="slds-text-heading_small">{!v.toast}</h2>
+          </div>
+        </div>
+      </div>  
+    </aura:if>
+      
+    <!-- Spinner -->
+    <aura:if isTrue="{!v.loading}">
+      <lightning:spinner alternativeText="Loading" /> 
+    </aura:if>
+      
+    <!-- Filters Bar -->
+    <aura:if isTrue="{!!v.detailMode}">
+      <div class="product-filters" onclick="{!c.resetItems}">
+        <lightning:slider label="Max Price" value="{!v.filterPrice}" min="0" max="200000" onchange="{!c.updateFilters}"></lightning:slider>
+		<lightning:slider label="Bedrooms" value="{!v.filterBedroom}" min="1" max="5" onchange="{!c.updateFilters}"></lightning:slider>   
+        <lightning:slider label="Berths" value="{!v.filterBirths}" min="1" max="10" onchange="{!c.updateFilters}"></lightning:slider>
+        <lightning:slider label="Max Width (ft)" value="{!v.filterWidth}" min="1" max="22" onchange="{!c.updateFilters}"></lightning:slider>
+        <lightning:slider label="Max Length (ft)" value="{!v.filterHeight}" min="1" max="60" onchange="{!c.updateFilters}"></lightning:slider>
+        <lightning:select label="Van Type" value="{!v.filterType}" onchange="{!c.updateFilters}">
+          <option>Any</option>
+          <option>Static</option>
+          <option>Lodge</option>
+          <option>Chalet</option>
+          <option>Tourer / Motorhome</option>
+        </lightning:select>
+        <lightning:select label="Van Year" value="{!v.filterYear}" onchange="{!c.updateFilters}">
+          <option>Any</option>
+          <option>Pre-2008</option>
+          <option>Post-2008</option>
+        </lightning:select>
+        <lightning:select label="Sales Status" value="{!v.filterStatus}" onchange="{!c.updateFilters}">
+          <option>Any</option>
+          <option>In Stock</option>  
+          <option>Out of Stock</option>
+        </lightning:select>
+        <lightning:input label="Accessibility Unit" checked="{!v.filterAccessible}" type="checkbox" onchange="{!c.updateFilters}"></lightning:input>
+        <div class="product-filters--reset">
+          <lightning:button variant="brand" label="Reset Filters" onclick="{!c.resetFilters}"></lightning:button>
+        </div>
+      </div>
+    </aura:if>
+    
+    <!-- Product Catalogue List -->
+    <aura:if isTrue="{!!v.detailMode}">
+    <div class="product-scroll">
+    <div class="product-cards" onclick="{!c.resetItems}">
+      <aura:iteration items="{!v.filteredProducts}" var="i">
+        <div class="{!'product-card ' + i.User_Selection__c + (i.View_Option__c || i.Final_Selection__c ? ' view' : '')}">
+          <lightning:button class="product-card--thumb_button" name="{!i.Id}" onclick="{!c.selectItem}">
+            <div class="product-card--thumb">
+            <aura:if isTrue="{!i.Previews__c.length != 0}">
+              <div style="{! 'background-image: url(https://cdn.parkdeanresorts.co.uk' + i.Previews__c[0].Image_URL__c + ')'}"/>
+            </aura:if>
+            <aura:if isTrue="{!i.Previews__c.length == 0}">
+              <div style="{! 'background-image: url(' + $Resource.ProductPlaceholder + ')' }"/>
+            </aura:if>
+            </div>
+          </lightning:button>
+          <aura:if isTrue="{!!i.Not_available_for_IPS__c}">
+            <div class="product-card--discount">IPS</div> 
+          </aura:if>
+          <div class="product-card--details">
+            <div class="product-card--details_title">{!i.Name}</div>
+            <div class="product-card--details_csn">CSN: {!i.CSN__c}</div>
+            <lightning:select name="{!i.Id}" label="Package Price" value="{!i.Price__c}" onchange="{!c.selectItem}">
+              <aura:iteration items="{!i.Prices__c}" var="p">
+                <option value="{!p.Discount_Price__c ? p.Discount_Price__c : p.Total_Price__c}">{!p.Pitch_Type__c} - 
+                  <ui:outputCurrency value="{!p.Discount_Price__c ? p.Discount_Price__c : p.Total_Price__c}"></ui:outputCurrency>
+                </option>  
+              </aura:iteration>
+            </lightning:select> 
+            <lightning:input onclick="{!c.stopEvent}" name="{!'View_Option__c::' + i.Id}" type="checkbox" label="View Option" onchange="{!c.setCheck}" checked="{!i.View_Option__c}"/>
+            <lightning:input onclick="{!c.stopEvent}" name="{!'Final_Selection__c::' + i.Id}" type="checkbox" label="Final Selection" onchange="{!c.setCheck}" checked="{!i.Final_Selection__c}"/>
+              <lightning:select label="View Order" value="{!i.Order__c}">
+                <option value="">-- Select view order --</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </lightning:select>
+            <lightning:button class="product-card-join" name="{!i.Id}" variant="brand" label="Join Us" title="Join Us" onclick="{!c.setFinal}"/>
+            <lightning:button name="{!'detail::' + i.Id}" variant="brand" label="Full Details" title="Full Details" onclick="{!c.changeMode}" />
+          </div>
+        </div>   
+      </aura:iteration>
+    </div>
+    </div>
+    </aura:if>
+      
+    <!-- Product Catalogue Detail -->
+    <aura:if isTrue="{!v.detailMode}">
+    <div class="product-scroll">
+      <div class="product-detail">
+        <div class="product-detail--banner">
+          <div class="product-detail--banner_title">
+            {!v.selectedProduct.Name}, {!v.selectedProduct.Unit_Type__c}  
+          </div>  
+          <div class="product-detail--banner_amount">
+            £<lightning:formattedNumber value="{!v.selectedProduct.Price__c}"></lightning:formattedNumber>
+          </div>
+        </div>
+        <div class="product-detail--info">
+          <div class="product-detail--info_images">
+            <div class="product-detail--info_image" style="{! 'background-image: url(' + $Resource.ProductPlaceholder + ')' }">
+              <div style="{!'background-image: url(https://cdn.parkdeanresorts.co.uk' + v.selectedProduct.Preview_Selection__c + ')'}"/>
+            </div>
+            <div class="product-detail--info_thumbs">
+              <aura:if isTrue="{!v.selectedProduct.Previews__c.length != 0}">
+                <aura:iteration items="{!v.selectedProduct.Previews__c}" var="s">
+                  <lightning:button name="{!s.Image_URL__c}" onclick="{!c.setPreview}">
+                    <div style="{!'background-image: url(https://cdn.parkdeanresorts.co.uk' + s.Image_URL__c+ ')'}"/>
+                  </lightning:button>
+                </aura:iteration>
+              </aura:if>
+            </div>
+          </div>
+          <ul class="product-detail--info_tabs">
+            <li name="1" class="{!v.selectedTab == 1}">
+              <lightning:button name="1" label="Key Information" onclick="{!c.changeTab}"></lightning:button>
+            </li>
+            <li name="2" class="{!v.selectedTab == 2}">
+              <lightning:button name="2" label="What's Included" onclick="{!c.changeTab}"></lightning:button>
+            </li>
+          </ul>  
+          <aura:if isTrue="{!v.selectedTab == 1}">
+            <div class="product-detail--info_content">
+              <div class="product-detail--info_item">
+                <lightning:icon iconName="utility:home"></lightning:icon>
+                <p>Bedrooms: {!v.selectedProduct.Number_of_bedrooms__c}</p>
+              </div>
+              <div class="product-detail--info_item">
+                <lightning:icon iconName="utility:groups"></lightning:icon>
+                <p>Sleeps: {!v.selectedProduct.Births__c}</p>
+              </div>
+              <div class="product-detail--info_item no-border">
+                <lightning:icon iconName="utility:event"></lightning:icon>
+                <p>Year: {!v.selectedProduct.Model_Year__c}</p>
+              </div>
+              <div class="product-detail--info_item no-border">
+                <lightning:icon iconName="utility:expand_alt"></lightning:icon>
+                <p>Size: {!v.selectedProduct.Width__c}ft x {!v.selectedProduct.Length__c}ft</p>
+              </div>
+            </div>
+          </aura:if>
+          <aura:if isTrue="{!v.selectedTab == 2}">
+            <div class="product-detail--info_content">
+              <lightning:formattedRichText value="{!v.selectedProduct.Holiday_Home_description__c}"/>
+            </div>
+          </aura:if>
+        </div>
+        <lightning:button name="list::null" variant="brand" label="Back to Catalogue" title="Back to Catalogue" onclick="{!c.changeMode}" />
+      </div>
+    </div>
+    </aura:if>
+      
+    <!-- Toolbar / Saving -->
+    <div class="product-tools" onclick="{!c.resetItems}">
+      <lightning:button variant="brand" label="Save Selections" title="Save Selections" onclick="{!c.saveSelected}"/>
+    </div>
+      
+  </div>
+	
+</aura:component>

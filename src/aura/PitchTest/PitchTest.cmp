@@ -1,0 +1,3 @@
+<aura:component access="global" controller="PitchCatalogue">
+  <lightning:container aura:id="App" src="{!$Resource.PitchSelector + '/index.html?name=elliott'}"></lightning:container>
+</aura:component>

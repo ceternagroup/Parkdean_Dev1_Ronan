@@ -1,0 +1,22 @@
+.THIS .search-table {
+  position: relative;
+  margin: 0 0 10px 0;
+}
+.THIS .search-results--header {
+  position: relative;
+  height: 52px;
+  padding: 0 10px;
+}
+.THIS .search-results--header .slds-button--neutral {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.THIS .search-results--header .slds-text-heading_medium {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+}
+.THIS .slds-text-heading_small {
+  padding: 0 10px 5px 10px;
+}

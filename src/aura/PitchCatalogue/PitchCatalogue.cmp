@@ -1,0 +1,171 @@
+<aura:component controller="PitchCatalogue" implements="lightning:isUrlAddressable,flexipage:availableForAllPageTypes" access="global">
+    
+  <!-- Component Attributes -->
+  <aura:attribute name="pitches" type="List"></aura:attribute>
+  <aura:attribute name="quoteId" type="String"></aura:attribute>
+  <aura:attribute name="recordId" type="String"></aura:attribute>
+  <aura:attribute name="parkId" type="String"></aura:attribute>
+  <aura:attribute name="detailMode" type="Boolean" default="false"></aura:attribute>
+  <aura:attribute name="selectedPitch" type="Map"></aura:attribute>
+  <aura:attribute name="selectedTab" type="Integer" default="1"></aura:attribute>
+  <aura:attribute name="loading" type="Boolean" default="true"></aura:attribute>
+  <aura:attribute name="saving" type="Boolean" default="false"></aura:attribute>
+  <aura:attribute name="toast" type="String" default=""></aura:attribute>
+  <aura:attribute name="error" type="String" default=""></aura:attribute>
+    
+  <!-- Filter Attributes -->
+  <aura:attribute name="filteredPitches" type="List"></aura:attribute>
+  <aura:attribute name="filterStatus" type="String" default="Vacant"></aura:attribute>
+  <aura:attribute name="filterType" type="String" default="Any"></aura:attribute>
+    
+  <!-- Component Initialisation Handler -->
+  <aura:handler name="init" value="{!this}" action="{!c.loadApp}"></aura:handler>
+    
+  <!-- Libraries -->
+  <lightning:overlayLibrary aura:id="overlayLib"/>
+    
+  <!-- Component Wrap -->
+  <div class="{!'product ' + v.detailMode}">
+      
+    <!-- Spinner -->
+    <aura:if isTrue="{!v.loading}">
+      <div class="product-spinner">
+        <table><tr><td>Waiting for Wizard, this may take a while...</td></tr></table>
+        <lightning:spinner alternativeText="Loading" />
+      </div>
+    </aura:if>
+      
+    <!-- Spinner -->
+    <aura:if isTrue="{!v.saving}">
+      <div class="product-spinner">
+        <table><tr><td>Saving...</td></tr></table>
+        <lightning:spinner alternativeText="Loading" />
+      </div>
+    </aura:if>
+      
+    <!-- Toasts -->
+    <aura:if isTrue="{!v.toast != ''}">
+      <div class="slds-notify_container">
+        <div class="slds-notify slds-notify_toast slds-theme_success">
+          <div style="width: 100%" class="slds-notify__content">
+            <h2 style="text-align: center" class="slds-text-heading_small">{!v.toast}</h2>
+          </div>
+        </div>
+      </div>  
+    </aura:if>
+      
+    <!-- Error -->
+    <aura:if isTrue="{!v.error != ''}">
+      <section class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <h2 class="slds-text-heading_medium slds-hyphenate">Something went wrong</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium">
+            <p><aura:unescapedHtml value="{!v.error}"></aura:unescapedHtml></p>
+          </div>
+          <footer class="slds-modal__footer">
+            <lightning:button variant="brand" label="Back to Quote" onclick="{!c.goBack}"></lightning:button>
+          </footer>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+      
+    <aura:if isTrue="{!v.error == ''}">
+      
+    <!-- Filters Bar -->
+    <aura:if isTrue="{!!v.detailMode}">
+      <div class="product-filters">
+        <lightning:select label="Status" value="{!v.filterStatus}" onchange="{!c.updateFilters}">
+          <option>Any</option>
+          <option>Owner</option>
+          <option>Vacant</option>
+          <option>Sales</option>
+          <option>HH</option>
+        </lightning:select>
+        <lightning:select label="Pitch Type" value="{!v.filterType}" onchange="{!c.updateFilters}">
+          <option>Any</option>
+          <option>Premium</option>
+          <option>Standard</option>
+        </lightning:select>
+        <div class="product-filters--reset">
+          <lightning:button variant="brand" label="Reset Filters" onclick="{!c.resetFilters}"></lightning:button>
+        </div>
+      </div>
+    </aura:if>
+    
+    <!-- Product Catalogue List -->
+    <aura:if isTrue="{!!v.detailMode}">
+    <div class="product-scroll">
+    <div class="product-cards">
+      <aura:iteration items="{!v.filteredPitches}" var="i">
+        <div class="product-card slds-card" style="border: 1px solid rgb(221, 219, 218)">
+          <div class="product-card--details">
+            <div class="product-card--details_title">{!i.Area_Name__c}, {!i.Pitch_Number__c}</div>
+             <div class="product-card--details_status">{!i.Pitch_Type__c}</div>
+            <lightning:input name="{!'View_Option__c::' + i.Id}" type="checkbox" label="View Option" checked="{!i.View_Option__c}"/>
+            <lightning:input name="{!'Final_Selection__c::' + i.Id}" type="checkbox" label="Final Selection" checked="{!i.Final_Selection__c}"/>
+            <lightning:button name="{!'detail::' + i.Id}" variant="brand" label="Full Details" title="Full Details" onclick="{!c.changeMode}" />
+          </div>
+        </div> 
+      </aura:iteration>
+    </div>
+    </div>
+    </aura:if>
+      
+    <!-- Product Catalogue Detail -->
+    <aura:if isTrue="{!v.detailMode}">
+    <div class="product-scroll">
+      <div class="product-detail">
+        <div class="product-detail--banner">
+          <div class="product-detail--banner_title">
+            {!v.selectedPitch.Pitch_Description__c}, {!v.selectedPitch.Pitch_Type__c}  
+          </div> 
+          <div class="product-detail--banner_amount">
+            £<lightning:formattedNumber value="{!v.selectedPitch.Price__c}"></lightning:formattedNumber>
+          </div>
+        </div>
+        <div class="product-detail--info">
+          <ul class="product-detail--info_tabs">
+            <li name="1" class="{!v.selectedTab == 1}">
+              <lightning:button name="1" label="Key Information" onclick="{!c.changeTab}"></lightning:button>
+            </li>
+            <li name="2" class="{!v.selectedTab == 2}">
+              <lightning:button name="2" label="What's Included" onclick="{!c.changeTab}"></lightning:button>
+            </li>
+            <li name="3" class="{!v.selectedTab == 3}">
+              <lightning:button name="3" label="More Details" onclick="{!c.changeTab}"></lightning:button>
+            </li>
+          </ul>  
+          <aura:if isTrue="{!v.selectedTab == 1}">
+            <div class="product-detail--info_content">
+              Key Information Contents
+            </div>
+          </aura:if>
+          <aura:if isTrue="{!v.selectedTab == 2}">
+            <div class="product-detail--info_content">
+              What's Included Contents
+            </div>
+          </aura:if>
+          <aura:if isTrue="{!v.selectedTab == 3}">
+            <div class="product-detail--info_content">
+              More Details Contents
+            </div>
+          </aura:if>
+        </div>
+        <lightning:button name="list::null" variant="brand" label="Back to Catalogue" title="Back to Catalogue" onclick="{!c.changeMode}" />
+      </div>
+    </div>
+    </aura:if>
+      
+    <!-- Toolbar / Saving -->
+    <div class="product-tools" onclick="{!c.resetItems}">
+      <lightning:button variant="brand" label="Save Selections" title="Save Selections" onclick="{!c.saveSelected}"/>
+    </div>
+        
+    </aura:if>
+      
+  </div>
+  
+</aura:component>

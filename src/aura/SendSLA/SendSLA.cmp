@@ -1,0 +1,23 @@
+<aura:component controller="SendSLA" implements="force:lightningQuickAction,force:hasRecordId">
+    
+  <aura:attribute name="loading" type="Boolean" default="true"></aura:attribute>
+  <aura:attribute name="recordId" type="String" default="0Q01X00000000UbSAI"></aura:attribute>
+  <aura:attribute name="error" type="String" default=""></aura:attribute>
+    
+  <aura:handler name="init" value="{!this}" action="{!c.sendSLA}"></aura:handler>
+    
+  <div class="sla">
+    
+    <!-- Spinner -->
+    <aura:if isTrue="{!v.loading}">
+      <lightning:spinner alternativeText="Loading" /> 
+    </aura:if>
+      
+    <!-- Error -->
+    <aura:if isTrue="{!v.error}">
+      {!v.error}
+    </aura:if>
+      
+  </div>
+	
+</aura:component>

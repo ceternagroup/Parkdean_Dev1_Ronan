@@ -1,0 +1,43 @@
+<aura:component controller="LeadSLACountdown" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global">
+    
+  <aura:attribute type="String" name="recordId" default="00Q1X000001D8SLUA0"></aura:attribute>
+  <aura:attribute type="Boolean" name="hasError" default="null"></aura:attribute>
+  <aura:attribute type="String" name="errorMessage"></aura:attribute>
+  <aura:attribute type="DateTime" name="deadlineDate"></aura:attribute>
+  <aura:attribute type="DateTime" name="showDeadlineDate"></aura:attribute>
+  <aura:attribute type="String" name="deadlineTitle" default="SLA Deadline"></aura:attribute>
+  <aura:attribute type="String" name="respondDate"></aura:attribute>
+  <aura:attribute type="DateTime" name="showRespondDate"></aura:attribute>
+  <aura:attribute type="DateTime" name="deadlineTimer"></aura:attribute>
+  <aura:attribute type="String" name="deadlineState"></aura:attribute>
+  <aura:attribute type="sObject" name="businessHours"></aura:attribute>
+  <aura:handler name="init" value="{!this}" action="{!c.getCountdown}"></aura:handler>
+  <force:recordData layoutType="FULL" recordId="{!v.recordId}" recordUpdated="{!c.refreshFrame}"></force:recordData>
+    
+  <div class="slds-card">
+    <aura:if isTrue="{!v.hasError}">
+      <div class="slds-text-title_caps">
+        Issue rendering deadline
+      </div>
+      <div class="slds-text-heading_large Error">
+        {!v.errorMessage}
+      </div>
+    </aura:if>
+    <aura:if isTrue="{!!v.hasError}">
+      <div class="slds-text-title_caps">
+        Response Deadline:
+        <lightning:formattedDateTime year="2-digit" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit" value="{!v.showDeadlineDate}" />
+      </div>
+      <aura:if isTrue="{!v.showRespondDate}">
+        <div class="slds-text-title_caps">
+          First Response:
+          <lightning:formattedDateTime year="2-digit" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit" value="{!v.showRespondDate}" />
+        </div>
+      </aura:if>
+      <div class="{!'slds-text-heading_large ' + v.deadlineState}">
+        {!v.deadlineTimer}
+      </div>
+    </aura:if>
+  </div>
+	
+</aura:component>

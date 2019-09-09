@@ -1,0 +1,12 @@
+<aura:component controller="ParkMap" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    
+  <aura:attribute name="recordId" type="String"></aura:attribute>
+  <aura:attribute name="parkMap" type="String"></aura:attribute>
+  <aura:attribute name="error" type="String"></aura:attribute>
+    
+  <aura:handler name="init" value="{!this}" action="{!c.loadMap}"/>
+    
+  <iframe style="width: 100%; min-height: 600px" src="{!v.parkMap}"/>
+  <div>{!v.error}</div>
+	
+</aura:component>
