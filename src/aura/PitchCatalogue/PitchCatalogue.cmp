@@ -78,11 +78,17 @@
     <aura:if isTrue="{!!v.detailMode}">
       <div class="product-filters">
         <lightning:select label="Status" value="{!v.filterStatus}" onchange="{!c.updateFilters}">
-          <option>Any</option>
+          <option value="Any">Any Status</option>
+          <option>Buy In</option>
+          <option>Finance Repossession</option>
+          <option>Off Site Sale</option>
           <option>Owner</option>
+          <option>Owner Defaulter</option>
+          <option>Owner/Van Leaving Park</option>
+          <option>Part Exchange</option>
+          <option>Reserved Van</option>
+          <option>Sales Van</option>
           <option>Vacant</option>
-          <option>Sales</option>
-          <option>HH</option>
         </lightning:select>
         <lightning:select label="Pitch Type" value="{!v.filterType}" onchange="{!c.updateFilters}">
           <option>Any</option>
@@ -102,8 +108,8 @@
       <aura:iteration items="{!v.filteredPitches}" var="i">
         <div class="product-card slds-card" style="border: 1px solid rgb(221, 219, 218)">
           <div class="product-card--details">
-            <div class="product-card--details_title">{!i.Area_Name__c}, {!i.Pitch_Number__c}</div>
-             <div class="product-card--details_status">{!i.Pitch_Type__c}</div>
+            <div class="product-card--details_title">{!i.Area_Name__c}, {!i.Zone_Name__c}</div>
+             <div class="product-card--details_status">{!i.Pitch_Number__c + ' ' + i.Pitch_Type__c}</div>
             <lightning:input name="{!'View_Option__c::' + i.Id}" type="checkbox" label="View Option" checked="{!i.View_Option__c}"/>
             <lightning:input name="{!'Final_Selection__c::' + i.Id}" type="checkbox" label="Final Selection" checked="{!i.Final_Selection__c}"/>
             <lightning:button name="{!'detail::' + i.Id}" variant="brand" label="Full Details" title="Full Details" onclick="{!c.changeMode}" />

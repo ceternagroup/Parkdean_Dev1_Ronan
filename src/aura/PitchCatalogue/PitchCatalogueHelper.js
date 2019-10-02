@@ -36,6 +36,13 @@
       if (fType != 'Any' && aType != fType) { return false;}
       return true;
     });
+    filtered = filtered.sort(function(a, b) {
+      var aVal = a.Area_Name__c + a.Pitch_Number__c;
+      var bVal = b.Area_Name__c + b.Pitch_Number__c;
+      if (aVal > bVal) return 1;
+      if (bVal > aVal) return -1;
+      return 0;
+    });
     $C.set('v.filteredPitches', filtered);
     $C.set('v.loading', false);
   },

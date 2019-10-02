@@ -115,7 +115,6 @@ public class UtilityHandler {
                 
                 String salesforceFieldName = mapping.Salesforce_Field_API_Name__c;
                 String odiFieldName = mapping.ODI_Field_Name__c;
-                system.debug(salesforceFieldName+', '+odiFieldName);
                 Object fieldValue = mapping.convert_To_Integer__c ? integer.valueOf(so.get(salesforceFieldName)) : string.isBlank(salesforceFieldName) ? null : so.get(salesforceFieldName);
                 
                 if (triggerType == 'CREATE'

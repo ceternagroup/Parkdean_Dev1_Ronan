@@ -8,6 +8,6 @@ private class dlrs_EventTest
     private static void testTrigger()
     {
         // Force the dlrs_EventTrigger to be invoked, fails the test if org config or other Apex code prevents this.
-        dlrs.RollupService.testHandler(new Event());
+       // dlrs.RollupService.testHandler(new Event());
     }
 }

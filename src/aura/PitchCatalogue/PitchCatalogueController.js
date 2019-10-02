@@ -1,6 +1,23 @@
 ({
   // load the items
   loadApp: function($C, $E, $H) {
+      
+    /*
+    // fake pitches
+    var pitches = [
+      { Area_Name__c: 'Ash Mews', Pitch_Number__c: '0030', Pitch_Type__c: 'Standard', Zone_Name__c: 'Z1', Pitch_Status__c: 'Vacant' },
+      { Area_Name__c: 'Ash Mews', Pitch_Number__c: '0023', Pitch_Type__c: 'Standard', Zone_Name__c: 'Z1', Pitch_Status__c: 'Vacant' },
+      { Area_Name__c: 'Ash Mews', Pitch_Number__c: '0047', Pitch_Type__c: 'Premium', Zone_Name__c: 'Z2', Pitch_Status__c: 'Vacant' },
+      { Area_Name__c: 'Beech Field', Pitch_Number__c: '0078', Pitch_Type__c: 'Standard', Zone_Name__c: 'Z2', Pitch_Status__c: 'Vacant' },
+      { Area_Name__c: 'Beech Field', Pitch_Number__c: '0031', Pitch_Type__c: 'Standard', Zone_Name__c: 'Z2', Pitch_Status__c: 'Vacant' },
+      { Area_Name__c: 'Cedar Walk', Pitch_Number__c: '0082', Pitch_Type__c: 'Standard', Zone_Name__c: 'Z3', Pitch_Status__c: 'Vacant' },
+    ];
+    $C.set('v.pitches', pitches);
+    $H.updateFilters($C);
+    $C.set('v.loading', false);
+    return null;
+    */
+        
     var params = { quoteId: $C.get('v.quoteId') };
     $H.runAction($C, 'c.getQuote', params, function(quote) {
       // handle missing values
@@ -11,14 +28,19 @@
       $C.set('v.parkId', quote.Park__c);    
       $H.runAction($C, 'c.getSelected', params, function(response) {
         var existing = response;
+        var stock = quote.Line_Items__r.filter(function(a) {
+          return a.Record_Type_Formula__c == 'Product_Line_Item';
+        });
+        if (stock.length == 0) return $H.showError($C, 'You have yet to make a final selection on Holiday homes');
         params = {
-          stockxId: quote.Line_Items__r[0].Stock_Id__c,
+          stockxId: stock[0].Stock_Id__c,
           parkId: '' + quote.Park__r.Park_ID__c,
           expectedDate: quote.Expected_handover_date__c,
           accountId: quote.Opportunity.Wizard_Account_Id__c
         };
         $H.runAction($C, 'c.getCatalogue', params, function(response) {
           console.log(response);
+          if (response == null) return $H.showError($C, 'WIZARD_ERROR: No results returned.');
           var res = JSON.parse(response);
           if (res.Error != null) return $H.showError($C, 'WIZARD_ERROR: ' + res.Error);
           if (res.Errors.length > 0) {

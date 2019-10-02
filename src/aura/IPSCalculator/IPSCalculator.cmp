@@ -1,23 +1,24 @@
 <aura:component controller="IPSCalculator" implements="lightning:isUrlAddressable" access="global">
     
-  <aura:attribute name="quoteId" type="String" default="0Q01X00000000UbSAI"></aura:attribute>
-  <aura:attribute name="quote" type="sObject"></aura:attribute>
-  <aura:attribute name="priceRules" type="List"></aura:attribute>
-  <aura:attribute name="parkFeatures" type="List"></aura:attribute>
-  <aura:attribute name="products" type="List"></aura:attribute>
-  <aura:attribute name="dates" type="List"></aura:attribute>
-  <aura:attribute name="peaks" type="Integer"></aura:attribute>
-  <aura:attribute name="summers" type="Integer"></aura:attribute>
-  <aura:attribute name="adjacents" type="Integer"></aura:attribute>
-  <aura:attribute name="loading" type="Boolean" default="true"></aura:attribute>
-  <aura:attribute name="saving" type="Boolean" default="false"></aura:attribute>
+  <aura:attribute name="quoteId" type="String" />
+  <aura:attribute name="quote" type="sObject"/>
+  <aura:attribute name="priceRules" type="List"/>
+  <aura:attribute name="parkFeatures" type="List"/>
+  <aura:attribute name="products" type="List"/>
+<!--  <aura:attribute name="products" type="List"/>-->
+  <aura:attribute name="dates" type="List"/>
+  <aura:attribute name="peaks" type="Integer"/>
+  <aura:attribute name="summers" type="Integer"/>
+  <aura:attribute name="adjacents" type="Integer"/>
+  <aura:attribute name="loading" type="Boolean" default="true"/>
+  <aura:attribute name="saving" type="Boolean" default="false"/>
     
-  <aura:handler name="init" value="{!this}" action="{!c.getData}"></aura:handler>
+  <aura:handler name="init" value="{!this}" action="{!c.getData}"/>
     
   <div class="app-header">
     <div class="app-header--quote">{!v.quote.Name}</div>
     <div class="app-header--park">{!v.quote.Park_Name__c}</div>
-    <lightning:button variant="brand" label="Back to Quote" onclick="{!c.goBack}"></lightning:button>
+    <lightning:button variant="brand" label="Back to Quote" onclick="{!c.goBack}"/>
   </div>
     
   <div class="ips">
@@ -37,7 +38,8 @@
         <p class="slds-m-bottom_small">
           Select the rows from the right-hand side of the dates you wish to use for IPS.
           <br/><br/>
-          The Letting Period must include Breaks adding up to 42 days with at least 2 weeks (each full week consisting of a consecutive 3 and 4 night Break) being in the summer peak period
+          The Letting Period must include Breaks adding up to 42 days with at least 2 weeks (each full week
+          consisting of a consecutive 3 and 4 night Break) being in the summer peak period
           <br/><br/>
           Shown below are the totals for all possible available dates, and totals for selected dates.
         </p>
@@ -61,15 +63,15 @@
               <td style="font-size: 11px">Gross Potential Income</td> 
               <aura:iteration items="{!v.products}" var="p">
                 <td style="text-align: center" class="{!p.Class__c}">
-                  <ui:outputCurrency value="{!p.Gross__c}"></ui:outputCurrency>
+                  <ui:outputCurrency value="{!p.Gross__c}"/>
                 </td>
               </aura:iteration>
             </tr>  
             <tr class="selected-true">
-              <td style="font-size: 11px">Total Income</td>  
+              <td style="font-size: 11px">Total Income {!v.products.length}</td>
               <aura:iteration items="{!v.products}" var="p">
                 <td style="text-align: center" class="{!p.Class__c}">
-                  <ui:outputCurrency value="{!p.Total__c}"></ui:outputCurrency>
+                  <ui:outputCurrency value="{!p.Total__c}"/>
                 </td>
               </aura:iteration>
             </tr>
@@ -77,7 +79,7 @@
               <td style="font-size: 11px">Rent</td>  
               <aura:iteration items="{!v.products}" var="p">
                 <td class="{!p.Class__c}">
-                  <lightning:input name="{!_index}" value="{!p.IPS_to_Rent__c}" onchange="{!c.updateRent}"></lightning:input>
+                  <lightning:input name="{!_index}" value="{!p.IPS_to_Rent__c}" onchange="{!c.updateRent}"/>
                 </td>
               </aura:iteration>
             </tr>
@@ -85,7 +87,7 @@
               <td style="font-size: 11px">Sale</td>  
               <aura:iteration items="{!v.products}" var="p">
                 <td class="{!p.Class__c}">
-                  <lightning:input name="{!_index}" value="{!p.IPS_on_deposit__c}" onchange="{!c.updateDeposit}"></lightning:input>
+                  <lightning:input name="{!_index}" value="{!p.IPS_on_deposit__c}" onchange="{!c.updateDeposit}"/>
                 </td>
               </aura:iteration>
             </tr>
@@ -101,9 +103,8 @@
           <br/><br/>
           To save your date selections to come back to later, press 'Save Selections'.
         </p>
-        <lightning:button class="slds-float_right slds-m-right_small" variant="brand" label="Save Selections" onclick="{!c.saveSelections}"></lightning:button>
+        <lightning:button class="slds-float_right slds-m-right_small" variant="brand" label="Save Selections" onclick="{!c.saveSelections}"/>
 
-          
           
       </div>
         
@@ -145,7 +146,7 @@
               </td>
               <aura:iteration items="{!d.pricing}" var="p">
                 <td style="text-align: center" class="{!p.Class__c + ' ' + p.Peak__c}">
-                  <ui:outputCurrency value="{!p.Price__c}"></ui:outputCurrency>
+                  <ui:outputCurrency value="{!p.Price__c}"/>
                 </td>  
               </aura:iteration>
             </tr>

@@ -17,7 +17,7 @@ global class ODIConvert {
   public static List<Map<String, String>> convertLeads(List<String> leadIds, LeadStatus convertStatus) {
     List<Database.LeadConvert> leads = new List<Database.LeadConvert>();
     for (Integer l = 0; l < leadIds.size(); l++) {
-      Database.LeadConvert lc = new Database.LeadConvert(); // com
+      Database.LeadConvert lc = new Database.LeadConvert();
       lc.setLeadId(leadIds[l]);
       lc.setConvertedStatus(convertStatus.ApiName);
       lc.setDoNotCreateOpportunity(true);

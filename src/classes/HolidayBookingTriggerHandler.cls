@@ -58,12 +58,12 @@ public with sharing class HolidayBookingTriggerHandler {
     * @Date:
     * @Description: Method to update lead owner to Sales Manager of Park and adding the lead to the campaign
     * @Revision(s): [Date] - [Change Reference] - [Changed By] - [Description]
-    *				07/08/2019 -
+    *				02/10/2019 - B0059 - Ronan Williams - Revert leads to ODI when corresponding campaign member removed
     ***********************************************************************************************/
     public static void setLeadAndCampaign(Map<Id, Holiday_Booking__c> newRecordMap, Map<Id, Holiday_Booking__c> oldRecordMap) {
 
-        Id LeadTypeId = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Holiday Maker').getRecordTypeId();
-        Id CampaignTypeId = Schema.SObjectType.Campaign.getRecordTypeInfosByName().get('Hot Holiday Campaign').getRecordTypeId();
+        Id LeadTypeId                   = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Holiday Maker').getRecordTypeId();
+        Id CampaignTypeId               = Schema.SObjectType.Campaign.getRecordTypeInfosByName().get('Hot Holiday Campaign').getRecordTypeId();
         Map<String, String> leadParkMap = new Map<String, String>();
         Set<Id> campaignLeadIdsToRemove = new Set<Id>();
 
@@ -123,8 +123,6 @@ public with sharing class HolidayBookingTriggerHandler {
 
         //adds a new campaign member
         insert newCampaignMembers;
-        //updates existing Lead.OwnerId
-        update leadsToReassign;
 
         //delete campaign members that are associated to a hot holiday
         List<CampaignMember> campaignMembersToRemove = [SELECT Id FROM CampaignMember
@@ -132,5 +130,20 @@ public with sharing class HolidayBookingTriggerHandler {
                                                         AND LeadId IN :campaignLeadIdsToRemove];
 
         delete campaignMembersToRemove;
+
+        List<User> ODIUsers = [SELECT Id FROM User WHERE Name = 'ODI'];
+
+        // reassign removed leads to ODI if ODI user found
+        if (ODIUsers.size() == 1){
+            for (Lead lead : [SELECT Id FROM Lead
+                                WHERE Id IN :campaignLeadIdsToRemove
+                                AND OwnerId != :ODIUsers[0].Id]){
+                lead.OwnerId = ODIUsers[0].Id;
+                leadsToReassign.add(lead);
+            }
+        }
+
+        //updates existing Lead.OwnerId
+        update leadsToReassign;
     }
 }
